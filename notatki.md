@@ -19,8 +19,12 @@ Table(name = "some_name") pozwala wprowadzić nazwę tabeli, można to zrobić b
 Repozytorium - tworzymu interfejs rozszerzający JPARepository, JPARepository jest generyczne i przyjmuje 2 wartości:
     Klasę oraz klucz główny, kolejność jest bardzo ważna, należy uważać aby nie zapisać tego odwrotnie.
 
-RepositoryRestResource - adnotacja umieszczana w repozytorium utworzy również kontroller(??). Pochodzi z
+@RepositoryRestResource - adnotacja umieszczana w repozytorium utworzy również kontroller(??). Pochodzi z
     spring-boot-starter-data-rest
+@RestResource - adnotacja umieszczana przy nadpisywaniu metod z repozytorium, zmieniając wewnątrz niej atrubut
+    exported na false sprawimy, że metoda nie będzie dostępna dla użytkowników. Adnotacja przyjmuje też kilka innych
+    atrybutów jak path określających nazwę ścieżki pod którą zasób jest dostępny czy rel określającą nazwę samego zasobu.
+
 
 Jackson: mappper wbudowany w Springa pozwalający przetworzyć obiekt do postaci JSON, wymaga publicznego dostępu.
 
@@ -33,3 +37,26 @@ Walidacja: można to zrobić na kilka sposobow, np w setter. Są też od tego ad
 Mappowanie błędów (ExceptionHandler?) walidacyjnych możemy osiągnąc implementując interface RepositoryRestConfigurer w klasie posiadającej 
     metodę main. Następnie nadpisujemy metodę configureValidatingRepositoryEventListener. Tutaj możemy dodać validatory
     zwracane z metody tworzącej LocalValidatorFactoryBean
+
+
+Testy w Postman: Zakładka tests oferuje kilkanaście predefiniowanych testów jakie możemy wykonać na naszym kontrollerze. 
+
+SpringCloud: mikroserwisy to styl tworzenia aplikacji skladajacej sie z niezaleznych aplikacji, kazda moze byc stworzona 
+    w roznych jezykach. Rozwiązanie wypromowane i rozbudowane przez serwis Netflix. Spring Cloud w dużej mierze składa się
+    z bibliotek, rozwiązań opracowanych przez Netflix. 
+
+Spring Batch: moduł pozwalający przetwarzać większe parie danych pozyskane z bazy. 
+
+HATEOAS: Hypermedia as the Engine of Application State. Stan aplikacji reprezentowany jako Hyperdata. Stanowi rozszerzene
+    dla REST. 
+
+
+
+
+
+
+
+
+
+
+

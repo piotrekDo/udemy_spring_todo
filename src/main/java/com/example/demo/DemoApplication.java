@@ -8,7 +8,6 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.beans.BeanProperty;
 
 @SpringBootApplication
 public class DemoApplication implements RepositoryRestConfigurer {

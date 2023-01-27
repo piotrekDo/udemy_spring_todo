@@ -12,7 +12,7 @@ public class Task {
     private int id;
     @NotBlank(message = "description cannot be blank")
     private String description;
-    private boolean isDone;
+    private boolean done;
 
     public Task() {
     }
@@ -34,10 +34,10 @@ public class Task {
     }
 
     public boolean isDone() {
-        return isDone;
+        return done;
     }
 
     public void setDone(boolean done) {
-        isDone = done;
+        this.done = done;
     }
 }
