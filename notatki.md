@@ -50,9 +50,20 @@ Spring Batch: moduł pozwalający przetwarzać większe parie danych pozyskane z
 HATEOAS: Hypermedia as the Engine of Application State. Stan aplikacji reprezentowany jako Hyperdata. Stanowi rozszerzene
     dla REST. 
 
+@RepositoryRestController: umieszczamy nad osobną klasą będącą kontrolerem właściwym dla repozytorium. Do prawidłowego 
+    działania wymaga dostarczenia obiektu repozytorium. Można to zrobić poprzez wstrzykiwanie zależności. 
+    Możemy tutaj nadpisywać metody dostępne w ramach repozytorium i uzupełniać je o dodatkową logikę. Zapisując wszystko
+    w takiej postaci otrzymamy nasz zasób bez metadanych dostarczanych w ramach HATEOAS. Aby je ptrzymać musimy doddac
+    do naszego projetku zależność do SpingHATEOAS, wówczas uzyskamy dostęp do obiektu Resources. Do obiektu Resources 
+    dodajemy dane pozyskane z bazy danych a sam obiekt Resources zwracamy jako zawartość ResponseEntity. Istnieje również
+    obiekt ResourceProcessor.
 
+Metoda zawarta w takim kontrolerze powinna posiadać adnotację @RequestMapping, gdzie wskazujemy jaką metodę z repozytorium
+    chcemy nadpisać, tak aby zamiast niej wywołała się nasza metoda. Możemy również użyc odpowiedniego dla metody mappingu
+    jak @GetMapping czy @PostMapping itd. 
 
-
+ResponseEntity to obiekt wrappujący na obiekty zwracane przez kontrolery. Pozwala to na przykład na ustalanie kodu 
+    odpowiedzi, gdzie domyślnie jest to kod 200, możemy ustalić kod 201. 
 
 
 
