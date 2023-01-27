@@ -72,5 +72,9 @@ ResponseEntity to obiekt wrappujący na obiekty zwracane przez kontrolery. Pozwa
 
 
 
+@RestController to połączenie @Controller oraz @ResponseBody. Od tego momentu każda metoda w takiej klasie będzie mappowała
+     w JSON. 
+
+
 
 
