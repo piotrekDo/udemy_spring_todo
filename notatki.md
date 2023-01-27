@@ -60,7 +60,10 @@ HATEOAS: Hypermedia as the Engine of Application State. Stan aplikacji reprezent
 
 Metoda zawarta w takim kontrolerze powinna posiadać adnotację @RequestMapping, gdzie wskazujemy jaką metodę z repozytorium
     chcemy nadpisać, tak aby zamiast niej wywołała się nasza metoda. Możemy również użyc odpowiedniego dla metody mappingu
-    jak @GetMapping czy @PostMapping itd. 
+    jak @GetMapping czy @PostMapping itd.
+    Do metody @RequestMapping możemy również przekazać atrybut params, gdzie możemy na przykład wskazać w jakich 
+    przypadkach metoda NIEpowinna zostać uruchomiona. Jeżeli chcemy stronicować w ramach metody w ramach kontrolera
+    musimy utworzyć przeciążenie metody. 
 
 ResponseEntity to obiekt wrappujący na obiekty zwracane przez kontrolery. Pozwala to na przykład na ustalanie kodu 
     odpowiedzi, gdzie domyślnie jest to kod 200, możemy ustalić kod 201. 
