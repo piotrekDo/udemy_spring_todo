@@ -1,0 +1,10 @@
+spring:
+  main:
+    banner-mode: off
+  profiles:
+    active: 'local'
+task.template.allowMultipleTasks: false
+management:
+  endpoints:
+    web:
+      base-path: '/status'
