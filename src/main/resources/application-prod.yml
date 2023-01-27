@@ -1,0 +1,7 @@
+spring:
+  h2.console:
+    enabled: false
+    path: '/h2'
+  datasource:
+    url: 'jdbc:h2:file:./todo-db'
+    username: 'sa'
