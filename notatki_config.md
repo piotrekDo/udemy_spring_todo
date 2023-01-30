@@ -15,8 +15,8 @@ W tym miejscu warto wspomnieć o poleceniu
 > ``` spring.jpa.hibernate.ddl-auto= ```  
 pozwalającym ustalić stworzenie, czy walidację istniejącej bazy.
 
-W dokumentacji Spring możemy znaleźć listę często występujących konfiguracji wraz z ich opisem
-https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+W [dokumentacji](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html)&#x00B9; Spring możemy znaleźć listę często występujących konfiguracji wraz z ich opisem
+
 
 ## YAML
 Yaml jest innym formatem zapisu, pozwalającym zredukować ilość kodu i potencjalnie uczynić kod bardziej
@@ -129,6 +129,106 @@ a więc umieszczenie odpowiednich adnotacji z włączeniem naszej klasy w klasie
 innym jeszcze rozwiązaniem wprowadzonym w Spring 2.2.1 jest adnotacja @ConfigurationPropertiesScan**
 
 ## Profile w Spring
-<details>
-LOL fsdfksfjdsdds
-</details>
+Spring pozwala na tworzenie wielu plików z rozszerzeniem .properties czy .yml, co nazywamy *profilami.* Pozwala to na
+wprowadzenie większej elastyczności i manipulowanie wartościami zapisanymi w plikach konfiguracynych. Powszechną praktyką
+są odrębne ustawienia dla środowiska produkcyjnego oraz deweloperskiego gdzie możemy na przykład zmienić adres bazy danych
+aby móc bezpiecznie wprowadzać oraz testować zmiany. Pliki mogą ze sobą 'współpracować' w taki sposób, że w najogólniejszym
+configu pozostawimy niezmienne rzeczy a kolejne profile będą do niego dopisywały swoje zmiany.
+
+Można więc utworzyć hierarchię:
+application.yml z podstawowymi ustawieniami:
+```
+spring:
+  main:
+    banner-mode: off
+  profiles:
+    active: 'local'   <-- profil domyślny, czytaj poniżej    
+task.template.allowMultipleTasks: false
+
+```
+
+następnie application-local.yml dopisujący ustawienia odpowiednia dla wprowadzania zmian:
+```
+spring:
+  h2.console:
+      enabled: true
+      path: '/h2'
+  datasource:
+    url: 'jdbc:h2:file:./todo-db'
+    username: 'sa'
+```
+
+oraz application-prod.yml ze swoją partią ustawień odpowiednią dla produkcji. Zmiany wprowadzone w *application-local.yml*
+nie będą tutaj uwzględniane i *vice versa*
+```
+spring:
+  h2.console:
+    enabled: false
+    path: '/h2'
+  datasource:
+    url: 'jdbc:h2:todo-db'
+    username: 'sa'
+```
+
+### Uruchamienie aplikacji z odpowiednim profilem
+**Domyślnie** uruchamia się jedynie plik ***applccation.*** Możemy do tego dodać nasz plik profilu.
+w pliku *application.* dopisujemy wartość *spring.profiles.active* wskazującą na domyślny profil.
+```
+spring.profiles.active=local
+```
+lub dla *YAML*
+```
+spring:
+  profiles:
+    active: 'local'
+```
+
+### Nadpisywanie wartośći 
+
+Priorytet dla wartości w pliku konfiguracyjnym:
+1. Ustawienia globalne w devtools *$HOME/.config/spring-boot* jeżeli *devtools* są aktywne
+2. Property zapisane w testach jednostkowych
+3. Argumenty z linii poleceń przy uruchammianiu aplikacji z poziomu terminalu
+4. Spring application JSON
+5. Parametry z *ServletConfig*
+6. Parametry z *ServletContext*
+7. [JNDI](https://pl.wikipedia.org/wiki/Java_Naming_and_Directory_Interface)&#x00B2;
+8. Java System properties (```System.getProperties()```)
+9. Zmienne systemu operacyjnego
+10. application.properties / .yml spoza pliku jar
+11. application.properties / .yml wewnątrz pliku jar
+12. Wartośći pochodzące z adnotacji *@PropertySource* wewnątrz klas oznaczonych adnotacją *@Configuration*
+13. Wartośći domyślne, ustawiane przez Spring'a
+
+
+Istnieje możliwość nadpisywania wartośći z poziomu InteliJ w *EditConfigurations* w polu *ActiveProfiles*
+W tym samym miejscu w *Enviroment* -> *VM options* możemy dopisywać poszczególne wartośći z dopiskiem **-D**
+```
+-Dspring.profiles.active=super-profil
+```
+
+jest to zapis nadrzędny nad *ActiveProfiles.*
+
+Istnieje również możliwość zmiennych systemowych- *Enviroment variables*  
+Tutaj zapisujemy properties bez przedrostka -D, oraz z separatorem _ zamiast .
+```
+spring_profiles_active=super-profil222
+```
+
+Jest to szczególnie użyteczne chcąc stworzyć skrypt budujący aplikację, np. dla Docker'a.
+
+
+### Bootstrap.properties / .yml
+W aplikacjiach Spring Cloud spotyka się plik *bootstrap.*. Jest to plik z konfiguracjami pobieranymi z serwera 
+konfiguracyjnego jeszcze przed wczytaniem plików *.application*. Plik *bootstrap.* może na przykład pobierać 
+informacje dotyczące bazy danych. Sam plik zawiera jedynie dane na temat serwera oraz klucz weryfikowny przez serwer
+konfiguracyjny. 
+
+
+
+LINKI
+
+&#x00B9; Dokumentacja Springa, lista najczęściej występujących props  
+https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html  
+&#x00B2; JNDI  
+https://pl.wikipedia.org/wiki/Java_Naming_and_Directory_Interface
