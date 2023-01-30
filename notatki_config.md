@@ -58,3 +58,72 @@ Możemy te obiekty wstrzykiwać do naszych klas. W takiej sytuacji potencjalne b
     }
 ```
 
+### Tworzenie własnych klas property
+
+Tworzymy klasę oznaczoną adnotacją @ConfigurationProperties. Wymaga ona przekazania prefiksu po którym występować będą 
+odpowiednie właściwości. Właściwości te są odzwierciedlone polami klasy. Wszystkie muszą posiadać gettery oraz settery.
+
+Dawniej dodatkowo taką klasę należało wskazać w innej, oznaczonej pochodnie adnotacją @Configuration do klas 
+konfiguracyjnych rozpoznawalnych przez Spring. Wykorzystujemy do tego adnotację @EnableConfigurationProperties(NazwaKlasy.class)
+
+dla przykładu utworzymy klasę konfiguracji dla 'task':
+
+```
+@ConfigurationProperties("task")
+public class TaskConfigurationProperties {
+
+    private boolean allowMultipleTasksFromTemplate;
+
+    public boolean isAllowMultipleTasksFromTemplate() {
+        return allowMultipleTasksFromTemplate;
+    }
+
+    public void setAllowMultipleTasksFromTemplate(boolean allowMultipleTasksFromTemplate) {
+        this.allowMultipleTasksFromTemplate = allowMultipleTasksFromTemplate;
+    }
+}
+```
+
+Którą należało dodać np. w klasie zawierającą adnotację @SpringBootApplication (adnotacja ta pochodzi od @Configuration)
+
+```
+@EnableConfigurationProperties(TaskConfigurationProperties.class)
+@SpringBootApplication
+public class DemoApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+    }
+
+    @Bean
+    Validator validator() {
+        return new LocalValidatorFactoryBean();
+    }
+}
+```
+
+Innym rozwiązaniem tej sytuacji jest nadanie adnotacji @Configuration bezpośrednio w klasie zawierającej adnotację
+@ConfigurationProperties, czyli w naszym przypadku w TaskConfigurationProperties.
+
+**Od wersji Spring 2.2 nie jest to wymagane, pomimo to InteliJ nadal sygnalizuje problem.**
+
+### Spring Boot Configuration Processor
+Kolejną kwestją jest sygnalizowany przez InteliJ brak Spring Boot Configuration Annotation Processor'a.
+Z uwagi na brak tej zależności nie dostaniemy podpowiedzi w plikach .properties czy .yml nawet jeżeli utworzymy 
+odpowiednie klasy odpowiadające za konfigurację. Aby uzyskać Spring Boot Configuration Processor powinniśmy dodać
+kolejną zależność do pliku pom.xml:
+
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-configuration-processor</artifactId>
+    <optional>true</optional>
+</dependency>
+```
+
+W pewnych sytuacjach możemy w dalszym ciągu nie uzyskiwać podpowiedzi w plikach .properties oraz .yml. W takim przypadku
+może pomóc reset InteliJ wraz z wyczyszczeniem cache. File -> Invalidate Caches.
+
+**Jeżeli aplikacja nie chce się zbudować możliwe jest, że wymagane są kroki opisane w sekcji *Tworzenie własnych klas property*,
+a więc umieszczenie odpowiednich adnotacji z włączeniem naszej klasy w klasie zawierającą adnotację @Configuration.
+innym jeszcze rozwiązaniem wprowadzonym w Spring 2.2.1 jest adnotacja @ConfigurationPropertiesScan**

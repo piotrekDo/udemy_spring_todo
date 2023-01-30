@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.example.demo.model.TaskConfigurationProperties;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,12 +33,11 @@ public class InfoController {
      */
 
     private final DataSourceProperties dataSourceProperties;
+    private final TaskConfigurationProperties taskConfigurationProperties;
 
-    @Value("${my.prop}")
-    private String prop;
-
-    public InfoController(DataSourceProperties dataSourceProperties) {
+    public InfoController(DataSourceProperties dataSourceProperties, TaskConfigurationProperties taskConfigurationProperties) {
         this.dataSourceProperties = dataSourceProperties;
+        this.taskConfigurationProperties = taskConfigurationProperties;
     }
 
     @GetMapping("/url")
@@ -47,8 +46,8 @@ public class InfoController {
     }
 
     @GetMapping("/prop")
-    String myProp() {
-        return prop;
+    boolean myProp() {
+        return taskConfigurationProperties.isAllowMultipleTasksFromTemplate();
     }
 
 }
