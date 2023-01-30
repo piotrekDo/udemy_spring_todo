@@ -127,3 +127,8 @@ może pomóc reset InteliJ wraz z wyczyszczeniem cache. File -> Invalidate Cache
 **Jeżeli aplikacja nie chce się zbudować możliwe jest, że wymagane są kroki opisane w sekcji *Tworzenie własnych klas property*,
 a więc umieszczenie odpowiednich adnotacji z włączeniem naszej klasy w klasie zawierającą adnotację @Configuration.
 innym jeszcze rozwiązaniem wprowadzonym w Spring 2.2.1 jest adnotacja @ConfigurationPropertiesScan**
+
+## Profile w Spring
+<details>
+LOL fsdfksfjdsdds
+</details>

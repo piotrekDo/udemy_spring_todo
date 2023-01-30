@@ -5,13 +5,26 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("task")
 public class TaskConfigurationProperties {
 
-    private boolean allowMultipleTasksFromTemplate;
+    private Template template;
 
-    public boolean isAllowMultipleTasksFromTemplate() {
-        return allowMultipleTasksFromTemplate;
+    public Template getTemplate() {
+        return template;
     }
 
-    public void setAllowMultipleTasksFromTemplate(boolean allowMultipleTasksFromTemplate) {
-        this.allowMultipleTasksFromTemplate = allowMultipleTasksFromTemplate;
+    public void setTemplate(Template template) {
+        this.template = template;
+    }
+
+    public static class Template {
+
+        private boolean allowMultipleTasks;
+
+        public boolean isAllowMultipleTasks() {
+            return allowMultipleTasks;
+        }
+
+        public void setAllowMultipleTasks(boolean allowMultipleTasks) {
+            this.allowMultipleTasks = allowMultipleTasks;
+        }
     }
 }
