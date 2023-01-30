@@ -13,6 +13,8 @@ public interface TaskRepository {
 
     Optional<Task> findById(Integer id);
 
+    boolean existsById(Integer id);
+
     Task save(Task entity);
 
     Page<Task> findAll(Pageable page);
