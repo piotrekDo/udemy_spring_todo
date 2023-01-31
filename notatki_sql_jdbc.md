@@ -34,8 +34,28 @@ pliku program się zatrzyma. Chcąc dokonać zmiany na instniejącej bazie **nal
 
 
 ### Migracja Java z pomocą Spring
-Możliwe jest wykonanie migracji [z pomocą klas Spring](https://flywaydb.org/documentation/concepts/migrations#spring) &#x00B9;
+Możliwe jest wykonanie migracji [z pomocą Spring](https://flywaydb.org/documentation/concepts/migrations#spring) &#x00B9;.
+Możemy to osiągnąć tworząć w pakiecie *java/db/migration*, **nie w folderze *resources/db/migration*** klasy rozszerzające
+klasę *BaseJavaMigration*. Nazwa tak utworzonej klasy musi podążać za wcześniej wspomnianą konwencją *Flyway*- WERSJA__NAZWA_KLASY
+Klasa taka *powinna też być publiczna*, musimy w niej zaimplementować metodę *migrate*.  
+  
+Przykład:  
+```
+package db.migration;
 
+import org.flywaydb.core.api.migration.BaseJavaMigration;
+import org.flywaydb.core.api.migration.Context;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+
+public class V2__insert_example_todo extends BaseJavaMigration {
+    @Override
+    public void migrate(Context context) throws Exception {
+        new JdbcTemplate(new SingleConnectionDataSource(context.getConnection(), true))
+                .execute("INSERT INTO tasks (description, done) VALUES ('Learn Java migrations', true)");
+    }
+}
+```
 
 
 
