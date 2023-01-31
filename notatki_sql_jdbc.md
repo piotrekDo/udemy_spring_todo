@@ -57,6 +57,27 @@ public class V2__insert_example_todo extends BaseJavaMigration {
 }
 ```
 
+## Natywny SQL w Spring Data
+Spring Data pozwala na tworzenie własnych zapytań. Może to być szczególnie użyteczne w sytuacji gdzie mamy do czynienia 
+ze skompplikowanym modelem danych lub gdy nazwa wygenerowanej w Spring Data metody zacznie się rozrastać, tracąc na czytelności.  
+Aby stworzyć taką metodę, wykorzystujemy adnotację **@Query** do której przekazujemy treść zapytania.  
+  
+Adnotacja *@Query* przyjmuje kilka wartośći, poniżej ustawiamy treść zapytania na natywny SQL, a do wartości *value* przekazujemy
+treść zapytania. W klauzuli *WHERE* wykorzystujemy zapis *id=?1* co oznacza, że odwołujemy się do pierwszego parametru 
+w zapisie metody.
+```
+@Query(nativeQuery = true, value = "SELECT COUNT(*) > 0 FROM tasks WHERE id=?1")
+    boolean existsById(Integer id);
+```
+<br></br>
+#### Adnotacja @Param zamiast numeracji 
+Możemy wykorzystać adnotację *@Param* przekazując do niej nazwę argumentu. Do tej nazwy odnosimy się w treści zapytania
+SQL poprzez zapis **id=:id**. Co ważne- pomimo, że odnosimy się do nazwy paramtru jako warości String, **wewnątrz zapytania SQL
+nie zapisujemy jej w cudzysłowie**
+```
+@Query(nativeQuery = true, value = "SELECT COUNT(*) > 0 FROM tasks WHERE id=:id")
+    boolean existsById(@Param("id") Integer id);
+```
 
 
 
