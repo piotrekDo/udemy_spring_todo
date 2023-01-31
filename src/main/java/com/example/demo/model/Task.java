@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -17,10 +16,9 @@ public class Task {
     private String description;
     private boolean done;
     private LocalDateTime deadline;
-    @JsonIgnore
-    private LocalDateTime createdOn;
-    @JsonIgnore
-    private LocalDateTime updatedOn;
+    @Embedded
+    private Audit audit = new Audit();
+
 
     public Task() {
     }
@@ -65,13 +63,5 @@ public class Task {
 
 
 
-    @PrePersist
-    void prePersist() {
-        this.createdOn = LocalDateTime.now();
-    }
 
-    @PreUpdate
-    void preUpdate() {
-        this.updatedOn = LocalDateTime.now();
-    }
 }
