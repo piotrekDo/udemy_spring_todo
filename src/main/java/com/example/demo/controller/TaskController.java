@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.beans.Transient;
 import java.util.List;
 
 
@@ -38,13 +37,13 @@ public class TaskController {
         return ResponseEntity.ok(repository.findAll(page));
     }
 
+    @Transactional
     @PutMapping("/{id}")
     ResponseEntity<?> updateTask(@PathVariable("id") int taskId, @RequestBody @Valid Task toUpdate) {
         if (!repository.existsById(taskId)) {
             return ResponseEntity.notFound().build();
         }
-        toUpdate.setId(taskId);
-        repository.save(toUpdate);
+        repository.findById(taskId).ifPresent(task -> task.updateFrom(toUpdate));
         return ResponseEntity.noContent().build();
     }
 
