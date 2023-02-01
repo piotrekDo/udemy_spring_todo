@@ -161,6 +161,28 @@ w momencie tworzenia obiektu, który tę kolekcję agreguje czy dopiero w sytuac
 wywołanie gettera.  
 **Dla relacji @OneToMany domyślnym typem jest FetchType.LAZY**
 
+#### Problem zapytań n+1
+Problem n+1 select'ów dotyczy sytuacji gdzie operujemy na obiekcie składającym się z kolekcji pobieranych za pomocą
+``FetchType.LAZY`` oznacza to, że dla każdego gettera zostanie wykonane dodatkowe zapytanie do bazy danych celem
+pobrania obiektów w kolekcji co obrazuje poniższy przykłąd.
+```
+List<String> getDescriptionsFromAllTasks(){
+    return repository.findAll().stream()
+    .flatMap(taskGropup-> taskGroup.getTasks().stream())
+    .map(task -> task.getDescription())
+    .collect(Collections().toList());
+}
+```
+W powyższym przykładzie jako, że obiekty ``Task`` sa pobierane poprzez ``FetchType.LAZY`` osobne zapytanie zostanie 
+wygenerowane każdorazowo dla ``getTasks()`` co może się objawić fatalną wydajnością.  
+  
+Problem ten można rozwiązać nadpisując metodę ``findAll()`` w taki sposób aby odrazu pobrała wszystkie obiekty ``Task``.  
+Poniżej przykład wykorzystujący [język zapytań HQL](https://docs.jboss.org/hibernate/core/3.3/reference/en/html/queryhql.html) &#x2074;
+```
+@Override
+    @Query("FROM TaskGroup g JOIN FETCH g.tasks")
+    List<TaskGroup> findAll();
+```
 
 <br></br>
 <br></br>
@@ -173,6 +195,8 @@ https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.
 &#x00B2; Strategie generowania kluczy głównych w Hibernate  
 https://thorben-janssen.com/jpa-generate-primary-keys/  
 &#x00B3; Kaskadowe operacje w Hibernate  
-https://www.baeldung.com/jpa-cascade-types
+https://www.baeldung.com/jpa-cascade-types  
+&#x2074; HQL- Hibernate Query Language
+https://docs.jboss.org/hibernate/core/3.3/reference/en/html/queryhql.html  
 
 
