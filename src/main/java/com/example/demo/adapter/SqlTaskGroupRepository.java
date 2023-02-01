@@ -12,7 +12,9 @@ import java.util.List;
 public interface SqlTaskGroupRepository extends JpaRepository<TaskGroup, Integer>, TaskGroupRepository {
 
     @Override
-    @Query("FROM TaskGroup g JOIN FETCH g.tasks")
+    @Query("SELECT DISTINCT g FROM TaskGroup g JOIN FETCH g.tasks")
     List<TaskGroup> findAll();
 
+    @Override
+    boolean existsByDoneIsFalseAndProject_Id(Integer projectId);
 }
