@@ -4,7 +4,7 @@ Hibernate do działania wykorzystuje *EntityManager* do komunikacji z bazą dany
 
 ### Adnotacja @Column
 
-Adnotacja @Column pozwala na zdefiniowanie kluczowych ustawień dla danch, takich jak unikalność czy wymóg przekazania
+Adnotacja ```@Column``` pozwala na zdefiniowanie kluczowych ustawień dla danch, takich jak unikalność czy wymóg przekazania
 jakiejś wartośći (*not null*). Warto zwrócić szczególną uwagę na opcję *columnDefinition* przyjmującą *String*
 pozwalający
 zapisać dowolne ustawienie w SQL, np.
@@ -40,7 +40,7 @@ Adnotacja nadawana na metody uruchamiane przed zapisem danych- *insert*.
 
 Adnotacja nadawana na metody uruchamiane przed uaktualnieniem danych.
 
-**Istnieją inne warjacje metod *Pre* oraz *Post* dla innych poleceń bazodanowych np. *@PreDelete***
+**Istnieją inne warjacje metod *Pre* oraz *Post* dla innych poleceń bazodanowych np. *```@PreDelete```***
 
 ### Adnotacja @Transactional
 
@@ -50,13 +50,13 @@ Zachowaniem tym można manipulować
 poprzez [dodatkowe ustawienia](https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#transaction-declarative-attransactional-settings)
 &#x00B9;
 możemy na przykład zdefiniować rodzaj wyjątków przerywających działanie transakcji poprzez atrybut *rollbackFor*.
-**Metoda na której wykonujemy @Transactional musi być publiczna i musi być częścią Springowego *Bean'a* a także musi
+**Metoda na której wykonujemy ```@Transactional``` musi być publiczna i musi być częścią Springowego *Bean'a* a także musi
 zostać wywołana z innego *bean'a* Springowego**
 
 ## Dziedziczenie w Hibernate
 
-Do oznaczania klas po których dziedziczymy używamy adnotacji **@MappedSuperclass**. Klasy z tą adnotacją nie znajdą
-odzwierciedlenia w bazie danych. Następnie w klasie dziedziczącej korzystamy z adnotacji **@Inheritance**. Przekazujemy
+Do oznaczania klas po których dziedziczymy używamy adnotacji **```@MappedSuperclass```**. Klasy z tą adnotacją nie znajdą
+odzwierciedlenia w bazie danych. Następnie w klasie dziedziczącej korzystamy z adnotacji **```@Inheritance```**. Przekazujemy
 do niej enum *InheritanceType* z trzema opcjami do wyboru:
 
 - JOINED - każda encja posiada własną tabelę, z wydzieloną częścią wspólną do odobnej tabeli, wymaga joinów.
@@ -65,7 +65,7 @@ do niej enum *InheritanceType* z trzema opcjami do wyboru:
 
 Strategia **SINGLE_TABLE** jest domyślną jeżeli nie wskażemy inaczej. W przypadku pojedyńczej tabeli zostanie utworzona
 dodatkowa kolumna pozwalająca rozróznić przechowywane rekordy, domyślnie nazwana *DTYPE*. Możemy to jednak zmienić
-poprzez adnotację **@DiscriminatorColumn**
+poprzez adnotację **```@DiscriminatorColumn```**
 ```
 @Entity(name="products")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -92,7 +92,7 @@ public class Pen extends MyProduct {
   
 W przypadku **JOINED** otrzymamy tabelę nadrzędną z częścią wspólną oraz osobne tabele dla każdej z encji. Jedyną rzeczą
 powtarzaną w tabelach pochodnych jest ID jako klucz obcy nawiązujący do rekordu z tabeli nadrzędnej aby umożliwić
-Hibernate wykonanie join'a. Nazwę tej kolumny możemy modyfikować dzięki adnotacji **@PrimaryKeyJoinColumn**
+Hibernate wykonanie join'a. Nazwę tej kolumny możemy modyfikować dzięki adnotacji **```@PrimaryKeyJoinColumn```**
 ```
 @Entity
 @PrimaryKeyJoinColumn(name = "petId")
@@ -115,11 +115,51 @@ Adnotacja @Embaddable pozwala na stosowanie kompozycji/ agregacji, czyli umieszc
 **@Embeddable umieszczane jest w klasie agregowanej**, nie musi być ona abstrakcyjna i nie jest osobno przechowywana w bazie
 danycyh. **Adnotacji @Embeddable nie można łączyć z @Entity**, klasy te nie są osobno mapowane do bazy danych.  
   
-**W klasie agregującej stosujemy adnotację @Embedded nad polami zagregowanymi**   
+**W klasie agregującej stosujemy adnotację ```@Embedded``` nad polami zagregowanymi**   
                                             
 <br></br>
-**Zmiany wprowadzone przy użyciu adnotacji @MappedSuperclass oraz @Embedded nie wymagają migracji!**
+**Zmiany wprowadzone przy użyciu adnotacji ```@MappedSuperclass``` oraz ```@Embedded``` nie wymagają migracji!**
 
+## Relacje bazodanowe
+Relacje (związki) umożliwiają zagnieżdżanie jednej encji wewnątrz drugiej. Istnieją trzy rodzaje związków określających 
+relację między obiektami.  
+
+- @OneToOne
+- @OneToMany / @ManyToOne
+- @ManyToMany
+  
+Zapisując adnotacje ```@OneToMany``` lub ```@ManyToOne``` odnosimy się do klasy w której umieszczamy adnotację.
+To oznacza, że umieszczając ```@ManyToOne``` w klasie 'A' nad obiektem 'B' informujemy Hibernate, że chcemy utworzyć związek,
+gdzie wiele obiektów 'A' jest powiązanych z jednym obiektem 'B'.  
+
+Wewnątrz adnotacji możemy zarządzać róznymi właściwościami, np. *[Cascade](https://www.baeldung.com/jpa-cascade-types)*&#x00B3; pozwalającym wykonywać operacje na powiązanych 
+obiektach
+
+#### MappedBy- relacja dwukierunkowa.
+Parametr *MappedBy* może zostać umieszczony wewnątrz adnotacji relacyjnej i wskazuje na **nazwę pola** w klasie, która jest
+**właścicielem** relacji (np. posiada referencję do drugiej tabeli za pomocą klucza obcego). Zatem umieszczamy ją w klasie 
+nie będącej włącicielem. 
+  
+**Relacje jeden do wielu / wiele do jednego**  
+Relacje tego rodzaju możemy tworzyć na dwa sposoby- za pomocą osobnej tabeli złączeniowej oraz poprzez wskazanie 
+właściciela relacji właśnie. 
+
+#### @JoinColumn
+Adnotacja umieszczana bezpośrednio pod adnotacją ```@OneTomany``` związek (relację), umożliwiająca określenie nazwy kolumny złączeniowej.
+**Może zostać użyta dla określenia relacji jednostronnej**.  
+**Sama adnotacja ```@JoinColumn``` również wskazuje właściciela relacji**, przy czym umieszczana jest po stronie właściciela.
+
+```
+@ManyToOne
+@JoinColumn(name = "task_group_id")
+private TaskGroup taskGroup;
+```
+
+#### FetchType
+FetchType jest ustawieniem przekazywanm do adnotacji relacynej. Określa on czy powiązana kolekcja ma zostać pobrana 
+w momencie tworzenia obiektu, który tę kolekcję agreguje czy dopiero w sytuacji gdy jasno na nią wskzujemy, np. poprzez
+wywołanie gettera.  
+**Dla relacji @OneToMany domyślnym typem jest FetchType.LAZY**
 
 
 <br></br>
@@ -132,4 +172,7 @@ danycyh. **Adnotacji @Embeddable nie można łączyć z @Entity**, klasy te nie 
 https://docs.spring.io/spring-framework/docs/current/reference/html/data-access.html#transaction-declarative-attransactional-settings  
 &#x00B2; Strategie generowania kluczy głównych w Hibernate  
 https://thorben-janssen.com/jpa-generate-primary-keys/  
+&#x00B3; Kaskadowe operacje w Hibernate  
+https://www.baeldung.com/jpa-cascade-types
+
 
