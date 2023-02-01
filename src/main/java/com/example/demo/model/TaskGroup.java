@@ -22,6 +22,15 @@ public class TaskGroup {
     public TaskGroup() {
     }
 
+    private TaskGroup(String description, Set<Task> tasks) {
+        this.description = description;
+        this.tasks = tasks;
+    }
+
+    public static TaskGroup CreateNewTaskGroup(String description, Set<Task> tasks) {
+        return new TaskGroup(description, tasks);
+    }
+
     public int getId() {
         return id;
     }
