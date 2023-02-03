@@ -34,17 +34,29 @@ public class ProjectService {
         if (!configurationProperties.getTemplate().isAllowMultipleTasks() && taskGroupRepository.existsByDoneIsFalseAndProject_Id(projectId)) {
             throw new IllegalStateException("Only one undone group form project is allowed");
         }
-        TaskGroup result = projectRepository.findById(projectId)
-                .map(project -> {
-                    TaskGroup taskGroup = new TaskGroup();
-                    taskGroup.setDescription(project.getDescription());
-                    taskGroup.setTasks(project.getProjectSteps().stream()
-                            .map(step -> Task.createNewTask(step.getDescription(), deadline.plusDays(step.getDaysToDeadline())))
-                            .collect(Collectors.toSet()));
-                    return taskGroup;
-                }).orElseThrow(() -> new NoSuchElementException(String.format("No project with ID %d found", projectId)));
 
-        return new GroupReadModel(result);
+        Project projectById = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("No project with ID %d found", projectId)));
+
+
+        TaskGroup taskGroup = new TaskGroup();
+        taskGroup.setDescription(projectById.getDescription());
+        taskGroup.setTasks(projectById.getProjectSteps().stream().map(step -> Task.createNewTask(step.getDescription(), deadline.plusDays(step.getDaysToDeadline()))).collect(Collectors.toSet()));
+        taskGroup.setProject(projectById);
+        taskGroupRepository.save(taskGroup);
+
+//        TaskGroup result = projectRepository.findById(projectId)
+//                .map(project -> {
+//                    TaskGroup taskGroup = new TaskGroup();
+//                    taskGroup.setDescription(project.getDescription());
+//                    taskGroup.setTasks(project.getProjectSteps().stream()
+//                            .map(step -> Task.createNewTask(step.getDescription(), deadline.plusDays(step.getDaysToDeadline())))
+//                            .collect(Collectors.toSet()));
+//                    taskGroup.setProject(project);
+//                    return taskGroupRepository.save(taskGroup);
+//                }).orElseThrow(() -> new NoSuchElementException(String.format("No project with ID %d found", projectId)));
+
+        return new GroupReadModel(taskGroup);
     }
 
 }

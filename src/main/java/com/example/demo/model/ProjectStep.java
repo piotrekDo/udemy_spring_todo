@@ -18,6 +18,11 @@ public class ProjectStep {
     public ProjectStep() {
     }
 
+    public ProjectStep(String description, int daysToDeadline) {
+        this.description = description;
+        this.daysToDeadline = daysToDeadline;
+    }
+
     public int getId() {
         return id;
     }

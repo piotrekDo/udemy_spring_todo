@@ -4,6 +4,7 @@ import com.example.demo.model.Task;
 import com.example.demo.model.TaskGroup;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,28 @@ public class GroupReadModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GroupReadModel that = (GroupReadModel) o;
+        return Objects.equals(description, that.description) && Objects.equals(deadline, that.deadline) && Objects.equals(tasks, that.tasks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(description, deadline, tasks);
+    }
+
+    @Override
+    public String toString() {
+        return "GroupReadModel{" +
+                "description='" + description + '\'' +
+                ", deadline=" + deadline +
+                ", tasks=" + tasks +
+                '}';
     }
 
     public LocalDateTime getDeadline() {

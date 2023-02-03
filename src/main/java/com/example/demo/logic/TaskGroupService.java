@@ -1,12 +1,12 @@
 package com.example.demo.logic;
 
-import com.example.demo.model.TaskConfigurationProperties;
 import com.example.demo.model.TaskGroup;
 import com.example.demo.model.TaskGroupRepository;
 import com.example.demo.model.TaskRepository;
 import com.example.demo.model.projection.GroupReadModel;
 import com.example.demo.model.projection.GroupWriteModel;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -34,6 +34,7 @@ public class TaskGroupService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void toggleGroup(Integer groupId) {
         if (taskRepository.existsByDoneIsFalseAndTaskGroup_Id(groupId)){
             throw new IllegalStateException("Group has undone tasks.");
