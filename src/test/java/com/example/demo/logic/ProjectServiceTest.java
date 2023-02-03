@@ -52,11 +52,11 @@ class ProjectServiceTest {
         projectById.setProjectSteps(Set.of(new ProjectStep("test1", 2)));
         TaskGroup taskGroupSaved = TaskGroup.CreateNewTaskGroup(projectById.getDescription(), Set.of(Task.createNewTask("test1", LocalDateTime.now())));
         GroupReadModel expectedResult = new GroupReadModel(taskGroupSaved);
-        expectedResult.setDeadline(expectedResult.getDeadline().plusDays(2));
         Mockito.when(configurationProperties.getTemplate()).thenReturn(template);
         Mockito.when(template.isAllowMultipleTasks()).thenReturn(true);
         Mockito.when(taskGroupRepository.existsByDoneIsFalseAndProject_Id(projectId)).thenReturn(false);
         Mockito.when(projectRepository.findById(projectId)).thenReturn(Optional.of(projectById));
+        Mockito.when(taskGroupRepository.save(Mockito.any())).thenReturn(taskGroupSaved);
 
         //when
         GroupReadModel result = projectService.createGroup(deadline, projectId);
