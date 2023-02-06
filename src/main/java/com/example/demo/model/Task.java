@@ -31,6 +31,12 @@ public class Task {
         this.deadline = deadline;
     }
 
+    public Task(String description, LocalDateTime deadline, TaskGroup taskGroup) {
+        this.description = description;
+        this.deadline = deadline;
+        if (taskGroup != null) this.taskGroup = taskGroup;
+    }
+
     public static Task createNewTask(String description, LocalDateTime deadline) {
         return new Task(description, deadline);
     }
@@ -81,8 +87,6 @@ public class Task {
         this.deadline = source.deadline;
         this.taskGroup = source.taskGroup;
     }
-
-
 
 
 }

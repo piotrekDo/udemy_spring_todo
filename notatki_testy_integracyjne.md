@@ -3,7 +3,7 @@
 Testy integracyjne określają, czy niezależnie opracowane jednostki oprogramowania działają poprawnie, gdy są ze sobą
 połączone. Celem testów integracyjnych, jak sama nazwa wskazuje, jest sprawdzenie, czy wiele oddzielnie opracowanych
 modułów współpracuje ze sobą zgodnie z oczekiwaniami.  
-  
+   
 Testy integracyjne mogą polegać na testowaniu interakcji z bazą danych lub upewnianiu się, że mikrousługi współpracują
 zgodnie z oczekiwaniami. Tego typu testy są droższe w prowadzeniu, ponieważ wymagają uruchomienia wielu części
 aplikacji.
