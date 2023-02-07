@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.logic.TaskService;
 import com.example.demo.model.Task;
 import com.example.demo.model.TaskRepository;
 import jakarta.validation.Valid;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 
 @RestController()
@@ -20,19 +22,21 @@ public class TaskController {
 
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
     private final TaskRepository repository;
+    private final TaskService taskService;
 
-    public TaskController(TaskRepository repository) {
+    public TaskController(TaskRepository repository, TaskService taskService) {
         this.repository = repository;
+        this.taskService = taskService;
     }
 
     @RequestMapping(method = RequestMethod.GET, params = {"!sort", "!page", "!size"})
-    ResponseEntity<List<Task>> readAllTasks() {
+    CompletableFuture<ResponseEntity<List<Task>>> readAllTasks(){
         logger.warn("Exposing all the tasks");
-        return ResponseEntity.ok(repository.findAll());
+        return taskService.findAllAsync().thenApply(ResponseEntity::ok);
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<Task> readTask(@PathVariable int id){
+    ResponseEntity<Task> readTask(@PathVariable int id) {
         return repository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -69,7 +73,7 @@ public class TaskController {
 
     @Transactional()
     @PatchMapping("/{id}")
-    public ResponseEntity<?> toggleTask(@PathVariable int id){
+    public ResponseEntity<?> toggleTask(@PathVariable int id) {
         if (!repository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

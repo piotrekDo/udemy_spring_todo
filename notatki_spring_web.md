@@ -148,3 +148,17 @@ public class MvcConfiguration  implements WebMvcConfigurer {
 filtra, wykonywana po metodzie ``chain.doFilter()`` zostanie wykonana po metodach interceptora**.
 
 
+## @Async wielowątkowość
+
+W springu metody asynchroniczne oznaczamy adnotacją ``@Async``. W metodach asynchronicznychh możemy wykorzystać obiekt
+[CompletableFuture](https://www.baeldung.com/java-completablefuture) na którym wywołamy metodę ``supplyAsync()``
+```
+@Async
+public CompletableFuture<List<Task>> findAllAsync() {
+    return CompletableFuture.supplyAsync(taskRepository::findAll);
+}
+```
+
+Dodatkowo w którejś klasie z adnnotacją ``@Configuration`` musimy umieścić adnotację ``@EnableAsync``.  
+Następnie w miejscu, gdzie uzyskujemy taki obiekt, np. w kontrolerze wywołujemy na nim jedną z dostępnych metod, np.
+``thenApply()`` odpowiadającą mapowaniu w Stream'ach. ``return taskService.findAllAsync().thenApply(ResponseEntity::ok);``
