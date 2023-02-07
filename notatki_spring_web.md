@@ -162,3 +162,21 @@ public CompletableFuture<List<Task>> findAllAsync() {
 Dodatkowo w którejś klasie z adnnotacją ``@Configuration`` musimy umieścić adnotację ``@EnableAsync``.  
 Następnie w miejscu, gdzie uzyskujemy taki obiekt, np. w kontrolerze wywołujemy na nim jedną z dostępnych metod, np.
 ``thenApply()`` odpowiadającą mapowaniu w Stream'ach. ``return taskService.findAllAsync().thenApply(ResponseEntity::ok);``
+
+# Actuator
+
+Actuator pozwala na monitorowanie stanu naszej aplikacji. Może sprawdzać stan połączenia z bazą danych , wysyłać powiadomienia
+itp. Do jego uruchomienia potrzebujemy zależnośći
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+Wówczas po uruchomieniu aplikacji, pod adresem ``/actuator`` otrzymamy podstawowe dane na temat stanu naszego programu.  
+Działanie actuatora możemy skonfigurować w pliku ``application.properties / yml`` [pełna lista dostępnych konfiguracji](https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties.actuator)
+Do podstawowych ustawień możemy zaliczyć:  
+- ``management.endpoints.web.base-path`` pozwala określić ścieżkę pod którą otrzymamy dane, domyślnie ``/actuator``.
+- ``management.endpoints.web.exposure.include`` po przecinku możemy wymieniać addresy uwzględnione w raporcie, możemy również
+przekazać '*' aby uzyskać wszystkie.
