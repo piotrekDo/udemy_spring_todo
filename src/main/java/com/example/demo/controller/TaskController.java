@@ -31,6 +31,20 @@ public class TaskController {
         return ResponseEntity.ok(repository.findAll());
     }
 
+    @GetMapping("/{id}")
+    ResponseEntity<Task> readTask(@PathVariable int id){
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/search/done")
+    ResponseEntity<List<Task>> readDoneTasks(@RequestParam(defaultValue = "true", required = false) boolean state) {
+        return ResponseEntity.ok(
+                repository.findAllByDone(state)
+        );
+    }
+
     @GetMapping()
     ResponseEntity<Page<Task>> readAllTasks(Pageable page) {
         logger.warn("Custom pageable");
