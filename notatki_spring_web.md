@@ -98,3 +98,53 @@ nadpisaniu metody ``getOrder`` możemy zdefiniować priorytet naszego filtra zwr
   
 Zamiast implementacji interfejsu możemy wykorzystać adnotację ``@Order`` i jako parametr przekazać wartość liczbową.
 
+## HandlerInterceptor
+
+Mechanizm dostarczony przez Springa, również pozwala procesować żądania. Nie zezwala na modyfikowanie obiektów żądania 
+i odpowiedzi. Udostępnia on trzy metody
+- ``preHandle`` umożliwa wykonanie działania przed wykonaniem Handlera
+- ``postHandle`` umożliwia wykonanie działania po wykonaniu Handlera
+- ``afterCompletion`` pozwala na wykoananie działania niezależnie od wykoanania postHandle. Wykonuje się jedynie w przypadku, gdy
+metoda ``preHandle`` zwróciła wartość ``true``.  
+  
+W odróżnieniu od filtrów, interceptory działają na obiektah ``HttpServletRequest`` oraz ``HttpServletResponse``.
+Interceptory do działania wymagają dodatkowej konfiguracji: 
+```
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class MvcConfiguration  implements WebMvcConfigurer {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LoggerInterceptor());
+    }
+}
+```
+Tworzymy klasę oznaczoną adnotacją ``@Configuration`` i implementując interfejs ``WebMvcConfigurer`` nadpisujemy metodę
+``addInterceptors``. Wewnątrz metody mamy dostęp do obiektu ``InterceptorRegistry``, gdzie możemy zarejestrować nasze interceptory.  
+
+Zamiast tworzenia obiektu new LoggerInterceptor() możemy go wstrzykiwać jako bean a nawet calą kolekcję interceptorów.
+```
+@Configuration
+public class MvcConfiguration  implements WebMvcConfigurer {
+    
+    private final Set<HandlerInterceptor> interceptors;
+
+    public MvcConfiguration(Set<HandlerInterceptor> interceptors) {
+        this.interceptors = interceptors;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        interceptors.forEach(registry::addInterceptor);
+    }
+}
+```
+
+
+**Zawsze w pierwszej kolejności zostają wykonane filtry, dopiero później interceptory. Dodatkowo logika zapisana wewnątrz 
+filtra, wykonywana po metodzie ``chain.doFilter()`` zostanie wykonana po metodach interceptora**.
+
+
