@@ -5,6 +5,7 @@ import com.example.demo.model.TaskRepository;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -20,5 +21,9 @@ public class TaskService {
     @Async()
     public CompletableFuture<List<Task>> findAllAsync() {
         return CompletableFuture.supplyAsync(taskRepository::findAll);
+    }
+
+    public List<Task> findTasksForTodayOrPastDue(){
+        return taskRepository.findAllByDoneIsFalseAndDeadlineLessThanEqualOrDeadlineIsNullAndDoneIsFalseOrderByDeadlineAsc(LocalDateTime.now());
     }
 }

@@ -21,11 +21,11 @@ import java.util.concurrent.CompletableFuture;
 public class TaskController {
 
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
-    private final TaskRepository repository;
+    private final TaskRepository taskRepository;
     private final TaskService taskService;
 
     public TaskController(TaskRepository repository, TaskService taskService) {
-        this.repository = repository;
+        this.taskRepository = repository;
         this.taskService = taskService;
     }
 
@@ -37,7 +37,7 @@ public class TaskController {
 
     @GetMapping("/{id}")
     ResponseEntity<Task> readTask(@PathVariable int id) {
-        return repository.findById(id)
+        return taskRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -45,40 +45,45 @@ public class TaskController {
     @GetMapping("/search/done")
     ResponseEntity<List<Task>> readDoneTasks(@RequestParam(defaultValue = "true", required = false) boolean state) {
         return ResponseEntity.ok(
-                repository.findAllByDone(state)
+                taskRepository.findAllByDone(state)
         );
     }
 
     @GetMapping()
     ResponseEntity<Page<Task>> readAllTasks(Pageable page) {
         logger.warn("Custom pageable");
-        return ResponseEntity.ok(repository.findAll(page));
+        return ResponseEntity.ok(taskRepository.findAll(page));
     }
 
     @Transactional
     @PutMapping("/{id}")
     ResponseEntity<?> updateTask(@PathVariable("id") int taskId, @RequestBody @Valid Task toUpdate) {
-        if (!repository.existsById(taskId)) {
+        if (!taskRepository.existsById(taskId)) {
             return ResponseEntity.notFound().build();
         }
-        repository.findById(taskId).ifPresent(task -> task.updateFrom(toUpdate));
+        taskRepository.findById(taskId).ifPresent(task -> task.updateFrom(toUpdate));
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping
     ResponseEntity<?> addNewTask(@RequestBody Task task) {
-        repository.save(task);
+        taskRepository.save(task);
         return ResponseEntity.ok().build();
     }
 
     @Transactional()
     @PatchMapping("/{id}")
     public ResponseEntity<?> toggleTask(@PathVariable int id) {
-        if (!repository.existsById(id)) {
+        if (!taskRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        repository.findById(id).ifPresent(task -> task.setDone(!task.isDone()));
+        taskRepository.findById(id).ifPresent(task -> task.setDone(!task.isDone()));
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/today")
+    public ResponseEntity<List<Task>> findTasksForTodayOrPastDue(){
+        return ResponseEntity.ok(taskService.findTasksForTodayOrPastDue());
     }
 
 }
