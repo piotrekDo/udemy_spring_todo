@@ -75,3 +75,26 @@ void lol(Principal p) {
 ``HttpServletRequest`` oraz ``HttpServletResponse`` - pozwalają uzyskać dostęp do całości żądania i odpowiedzi.
 
 [lista praametrów z dokumentacji](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-arguments)
+
+# Filter
+
+Filtry to fragmenty kodu wykonywane przed przetworzeniem każdego żądania. Mogą modyfikować, żądanie, sprawdzać je czy 
+odrzucać. Zaletą filtrów może być odrzucanie niechcianch połączeń jeszcze przed ich przetworzeniem przez aplikację, co
+pozwala na oszczędność zasobów. Jednak obecność filtra należy traktować jak osobną, dodatkową warstwę, co może powodować
+wydłużenie czasu odpowiedzi na żądanie użytkownika.  
+  
+## Tworzenie własnego Filtra
+
+Tworzymy klasę implementują interfejs ``Filter`` pochodzący z pakietu ``jakarta.servlet``. Musimy zaimplementować teraz
+metodę ``doFilter``. Następnie oznaczamy klasę adnotacją ``@Component`` aby mogła zostać wykorzystana przez Spring'a.   
+**WAŻNE!** jeżeli chcemy przepuścić żądanie dalej mumimy wywołać metodę ``chain.doFilter(request, response);`` w przeciwnym
+razie żądanie zostanie zatrzymane w tym miejscu. 
+
+## Kolejność wykonywania filtrów i adnotacja @Order
+
+W ramach naszej aplikacji możemy definiować wiele filtrów. Dzięki implementacji interfejsu ``Ordered`` a następnie 
+nadpisaniu metody ``getOrder`` możemy zdefiniować priorytet naszego filtra zwracając wartość liczbową w metodzie.  
+**Priorytet działa na zasadzie kolejnośći. Filtr z ``order`` 1 wykona się przed filtrem z ``order`` 2.**  
+  
+Zamiast implementacji interfejsu możemy wykorzystać adnotację ``@Order`` i jako parametr przekazać wartość liczbową.
+
