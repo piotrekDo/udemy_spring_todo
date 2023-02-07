@@ -22,4 +22,7 @@ public interface TaskRepository {
     Page<Task> findAll(Pageable page);
 
     List<Task> findAllByDone(@Param("state") boolean isDone);
+
+    List<Task> findAllByTaskGroup_Id(int id);
+
 }

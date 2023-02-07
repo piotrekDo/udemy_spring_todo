@@ -5,10 +5,12 @@ import com.example.demo.model.Task;
 import java.util.Objects;
 
 public class GroupTaskReadModel {
+    private int id;
     private boolean done;
     private String description;
 
     public GroupTaskReadModel(Task task) {
+        this.id = task.getId();
         this.description = task.getDescription();
         this.done = task.isDone();
     }
@@ -32,6 +34,14 @@ public class GroupTaskReadModel {
                 "done=" + done +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public boolean isDone() {
