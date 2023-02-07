@@ -54,4 +54,5 @@ public class ProjectService {
                     return taskGroupService.createGroup(targetGroup);
                 }).orElseThrow(() -> new NoSuchElementException(String.format("No project with ID %d found", projectId)));
     }
+
 }
