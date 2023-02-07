@@ -147,6 +147,36 @@ public class MvcConfiguration  implements WebMvcConfigurer {
 **Zawsze w pierwszej kolejności zostają wykonane filtry, dopiero później interceptory. Dodatkowo logika zapisana wewnątrz 
 filtra, wykonywana po metodzie ``chain.doFilter()`` zostanie wykonana po metodach interceptora**.
 
+## ExceptionHandler
+
+Exception handler to mechanizm pozwalający mapować nieprecyzyjne błedy kodu 500 na błędy wskazujące bezpośrednio na problem.
+Jednym ze sposobów na utworzenie takiego mapowania jest zapisanie metod oznaczonych adnotacją ``@Exceptionhandler``
+jako argument metody przekazujemy nazwę klasy błędu, którą chcemy mapować na odpowiedni kod HTTP.  
+Poniżej przykładowe mapowania z wykorzystaniem obiektu błędu przyjmującego pola kodu, wiadomości i szczegółów błędu. 
+
+```
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<ErrorEntity<String>> handleIllegalArgumentException(IllegalArgumentException e) {
+        return new ResponseEntity<>(new ErrorEntity<>(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                e.getMessage()
+        ), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    ResponseEntity<ErrorEntity<String>> handleNoSuchElementException(NoSuchElementException e){
+        return new ResponseEntity<>(new ErrorEntity<>(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                e.getMessage()
+        ) ,HttpStatus.NOT_FOUND);
+    }
+```
+
+Dodatkowo, zamiast deklarować handlery wewnątrz każdego kontrolera z osobna, możemy przenieść je do wspólnej klasy
+oznaczonej adnotacją ``@ControllerAdvice``. Wszystkie handlery zapisane w poszczególnych kontrolerach będą nadpisywały
+te wspólne. 
 
 ## @Async wielowątkowość
 
