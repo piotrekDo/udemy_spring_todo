@@ -51,7 +51,7 @@ public class ProjectService {
                                         task.setDeadline(deadline.plusDays(projectStep.getDaysToDeadline()));
                                         return task;
                                     }).collect(Collectors.toSet()));
-                    return taskGroupService.createGroup(targetGroup);
+                    return taskGroupService.createGroup(targetGroup, project);
                 }).orElseThrow(() -> new NoSuchElementException(String.format("No project with ID %d found", projectId)));
     }
 
