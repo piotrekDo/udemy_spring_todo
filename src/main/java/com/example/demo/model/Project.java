@@ -13,9 +13,9 @@ public class Project {
     private int id;
     @NotBlank(message = "Project's description must not be empty")
     private String description;
-    @OneToMany(mappedBy = "project")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     private Set<TaskGroup> taskGroups;
-    @OneToMany(mappedBy = "project")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
     private Set<ProjectStep> projectSteps;
 
     public Project() {

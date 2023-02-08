@@ -7,6 +7,8 @@
 </head>
 <body>
     <main>
+        <!--/*@thymesVar id="message" type="java.lang.String"*/-->
+        <h1 th:if="${message != null}" th:text="${message}"></h1>
         <fieldset>
             <legend>Nowy projekt</legend>
             <!--/*@thymesVar id="project" type="com.example.demo.model.projection.ProjectWriteModel"*/-->
@@ -20,12 +22,12 @@
                         <input type="text" th:field="*{steps[__${stepStat.index}__].description}">
                     </label>
                     <label>Deadline
-                        <input type="number" th:field="*{steps[__${stepStat.index}__].daysToDeadline}">
+                        <input type="number" max="0" step="1" th:field="*{steps[__${stepStat.index}__].daysToDeadline}">
                     </label>
                     <div th:if="${stepStat.index} > 0"><button type="submit" name="removeStep" th:value="${stepStat.index}">-</button></div>
                 </fieldset>
                 <div><button type="submit" name="addStep">+</button></div>
-                <div>
+                <div style="margin-top: 15px">
                     <button type="submit">Dodaj</button>
                     <button type="reset">Wyczyść</button>
                 </div>
