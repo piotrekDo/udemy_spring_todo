@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo App: projects</title>
+    <link rel="stylesheet" href="https://unpkg.com/awsm.css/dist/awsm.min.css">
+</head>
+<body>
+    <main>
+        <fieldset>
+            <form method="post" th:action="@{/projects}">
+                <legend>Nowy projekt</legend>
+                <label>Opis
+                    <input type="text" />
+                </label>
+            </form>
+        </fieldset>
+    </main>
+</body>
+</html>
