@@ -102,3 +102,22 @@ odowłanie do obecnego indeksu iteracji ``[__${stepStat.index}__]`` co zonacza `
     </label>
 </fieldset>
 ```
+
+## Walidacja
+
+W ramach walidacji obiektu trafiającego z formularza do kontrolera możemy posłużyć się obiektem ``BindingResult``.
+Odwołuje się on do **poprzedniego** argumentu metody. W poniższym przykładzie referencja ``bindingResult`` pozwala odwołać
+się do ``current`` odpowiadającego właśnie obiektowi uzyskanemu z szablonu. 
+```
+@PostMapping
+String addProject(@ModelAttribute("project") @Valid ProjectWriteModel current, BindingResult bindingResult, Model model ){
+    if (!bindingResult.hasErrors()) {
+        projectService.save(current);
+        ProjectWriteModel projectWriteModel = new ProjectWriteModel();
+        projectWriteModel.setDescription("test from controller");
+        model.addAttribute("project", projectWriteModel);
+        model.addAttribute("message", "Projekt został dodany");
+    }
+    return "projects";
+}
+```

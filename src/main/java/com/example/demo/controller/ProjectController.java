@@ -4,8 +4,10 @@ import com.example.demo.logic.ProjectService;
 import com.example.demo.model.Project;
 import com.example.demo.model.ProjectStep;
 import com.example.demo.model.projection.ProjectWriteModel;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,12 +42,14 @@ public class ProjectController {
     }
 
     @PostMapping
-    String addProject(@ModelAttribute("project") ProjectWriteModel current, Model model ){
-        projectService.save(current);
-        ProjectWriteModel projectWriteModel = new ProjectWriteModel();
-        projectWriteModel.setDescription("test from controller");
-        model.addAttribute("project", projectWriteModel);
-        model.addAttribute("message", "Projekt został dodany");
+    String addProject(@ModelAttribute("project") @Valid ProjectWriteModel current, BindingResult bindingResult, Model model ){
+        if (!bindingResult.hasErrors()) {
+            projectService.save(current);
+            ProjectWriteModel projectWriteModel = new ProjectWriteModel();
+            projectWriteModel.setDescription("test from controller");
+            model.addAttribute("project", projectWriteModel);
+            model.addAttribute("message", "Projekt został dodany");
+        }
         return "projects";
     }
 

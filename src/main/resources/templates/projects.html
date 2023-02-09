@@ -22,6 +22,7 @@
             <legend>Nowy projekt</legend>
             <!--/*@thymesVar id="project" type="com.example.demo.model.projection.ProjectWriteModel"*/-->
             <form method="post" th:action="@{/projects}" th:object="${project}">
+                <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}" style="color: red"></p>
                 <label>Opis
                     <input type="text" th:field="*{description}"/>
                 </label>
@@ -41,7 +42,6 @@
                     <button type="reset">Wyczyść</button>
                 </div>
             </form>
-
         </fieldset>
     </main>
 </body>
