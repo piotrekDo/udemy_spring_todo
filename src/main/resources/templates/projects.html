@@ -16,6 +16,12 @@
                 <ul>
                     <li th:each="step: ${project.projectSteps}" th:text="|${step.description} ${step.daysToDeadline} dni|"></li>
                 </ul>
+                <form method="post" th:action="@{/projects/{projectId}(projectId=${project.id})}">
+                    <label> Deadline
+                        <input name="deadline" type="datetime-local">
+                    </label>
+                    <button type="submit">Utwórz taski</button>
+                </form>
             </dd>
         </dl>
         <fieldset>
