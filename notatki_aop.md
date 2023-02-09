@@ -52,3 +52,32 @@ enum zawierający wiele opcji, najczęściej jest to:
 ## Adnotacja @Timed
 
 Adnotacja pochodząca z pakietu ``io.micrometer.core.annotation`` pozwalająca mierzyć czas działania metody
+
+## Tworzenie aspektu
+
+Tworzymy więc klasę oznaczoną adnotacjami ``@Aspect`` oraz ``@Component``. Wewnątrz takiej klasy definiujemy *porady*.
+
+```
+@Aspect
+@Component
+public class LogicAspect {
+    private final Timer projectCreateGroupTimer;
+
+    public LogicAspect(final MeterRegistry registry) {
+        this.projectCreateGroupTimer = registry.timer("logic.project.create.group");
+    }
+
+    @Around("execution(* com.example.demo.logic.ProjectService.createGroup(..))")
+    Object aroundProjectCreateGroup(ProceedingJoinPoint jp) {
+        return projectCreateGroupTimer.record(() -> {
+            try {
+                return jp.proceed();
+            } catch (Throwable e) {
+                if (e instanceof RuntimeException) throw (RuntimeException) e;
+                else throw new RuntimeException(e);
+            }
+        });
+    }
+}
+```
+
