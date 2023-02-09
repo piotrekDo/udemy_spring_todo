@@ -1,11 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.logic.ProjectService;
+import com.example.demo.model.Project;
 import com.example.demo.model.ProjectStep;
 import com.example.demo.model.projection.ProjectWriteModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/projects")
@@ -20,7 +23,6 @@ public class ProjectController {
     @GetMapping
     String showProjects(Model model) {
         ProjectWriteModel projectWriteModel = new ProjectWriteModel();
-        projectWriteModel.setDescription("test from controller");
         model.addAttribute("project", projectWriteModel);
         return "projects";
     }
@@ -28,7 +30,6 @@ public class ProjectController {
     @PostMapping(params = "addStep")
     String addStep(@ModelAttribute("project") ProjectWriteModel current) {
         current.getSteps().add(new ProjectStep());
-
         return "projects";
     }
 
@@ -46,5 +47,10 @@ public class ProjectController {
         model.addAttribute("project", projectWriteModel);
         model.addAttribute("message", "Projekt został dodany");
         return "projects";
+    }
+
+    @ModelAttribute("projects")
+    List<Project> getProjects(){
+       return projectService.findAll();
     }
 }
