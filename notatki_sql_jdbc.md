@@ -79,6 +79,15 @@ nie zapisujemy jej w cudzysłowie**
     boolean existsById(@Param("id") Integer id);
 ```
 
+## O migracjach słów kilka
+Migracje warto podzielić na dwie kategorie- migracja struktur czyli np. dodanie nowej kolumny do tabeli bazodanowej
+oraz migrację danych polegających np. na przeniesieniu części danych czy wprowadzeniu nowych, bądź ich usunięciu.
+Zmiany strukturalne powinniśmy wykonywać w ramach SQL'owych zapytań z wykorzystaniem plików *.sql*, zatem plików
+migracyjnych zawartych w ramach folderu *resources/db/migration*. Natomiast migracje danych najlepiwj przeprowadzać
+z wykorzystaniem *migracji Java*. Tworząc nowe kolumny w naszych tabelach należy pamiętać o sposobie mapowania konwencji
+zapisu nazw. W SQL nazwy zapisujemy w snake_case, w Java wykorzystujemy camelCase. Trzeba na to zwracać uwagę przy
+zapisie plików migracji, dla przykładu pole klasy *createdOn* w SQL powinniśmy zapisać jako *created_on*. W przeciwnym
+przypadku spotkamy się z wyjątkiem przy rozruchu programu i etapie walidacji. 
 
 
 <br></br>
