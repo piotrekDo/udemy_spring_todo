@@ -1,7 +1,6 @@
 package com.example.demo.model.event;
 
 import com.example.demo.model.Task;
-import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.time.Clock;
 import java.time.Instant;

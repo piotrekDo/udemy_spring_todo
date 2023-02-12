@@ -45,5 +45,42 @@ Klasa pozwalająca obublikować zdarzenie.
   
 Dobrą praktyką jest publikacja zdarzeń w ramach metody oznaczonej adnotacją ``@Transactional``.
 
-## Własne zdarzenia
+```
+private final ApplicationEventPublisher publisher;
 
+    @Transactional()
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> toggleTask(@PathVariable int id) {
+        if (!taskRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        taskRepository.findById(id)
+                .map(Task::toggle)
+                .ifPresent(publisher::publishEvent);
+        return ResponseEntity.noContent().build();
+    }
+```
+
+## Nasłuchiwanie zdarzeń
+
+W celu nasługiwania na wyemitowane zdarzenia w komponencie posługujemy się metodą oznaczoną ``@EventListener``.
+Spring najczęściej po samej sygnaturze metody jest w stanie wywnioskować o jaki event nam chodzi, natomiast można to sprecyzować
+w samej adnotacji. 
+
+```
+@Service
+public class ChangedTaskEventListener {
+
+    private static final Logger logger = LoggerFactory.getLogger(ChangedTaskEventListener.class);
+
+    @EventListener
+    public void on(TaskDone event) {
+        logger.info("got: " + event);
+    }
+
+    @EventListener
+    public void on(TaskUndone event){
+        logger.info("got " + event);
+    }
+}
+```
