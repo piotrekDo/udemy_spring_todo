@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
-@Repository()
+@Repository
 interface SqlTaskRepository extends TaskRepository, JpaRepository<Task, Integer> {
 
     @Override

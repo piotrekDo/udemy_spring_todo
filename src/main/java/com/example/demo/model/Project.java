@@ -21,6 +21,11 @@ public class Project {
     public Project() {
     }
 
+    public Project(int id, String description) {
+        this.id = id;
+        this.description = description;
+    }
+
     public int getId() {
         return id;
     }
