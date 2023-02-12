@@ -1,8 +1,12 @@
 # Zdarzenia  
 
-Spring pozwala reagować na różne zdarzenia w ramach działania naszej aplikacji.  
+Spring pozwala reagować na różne zdarzenia w ramach działania naszej aplikacji. Aplikacja może regować na wystąpienie jakiegoś
+*zdarzenia*, takiego jak start programu czy wyołanie jakiejś funkcji. 
 Aby utowrzyć nowe zdarzenie tworzymy klasę oznaczoną jako ``@Component`` i rozszerzamy interfejs ``ApplicationListener``.
-Interfejs ten jest generyczny i musimy przekazać obiekt rozszerzający ``ApplicationEvent``. 
+Interfejs ten jest generyczny i musimy przekazać obiekt rozszerzający ``ApplicationEvent``.  
+*ApplicationListener* to interejs dedykowany specjalnie do obsługi klas zarządzających zdarzeniami. Jest on generyczny i 
+musimy przekazać do niego coś rozszerzającego *ApplicationEvent*, jest to specjalna lista klas określających konkretne zdarzenia.
+Klas tych jest wiele i najlepiej jest je podejżeć w hierarchii klas ``ctrl + H``.
   
 Poniżej zdefiniowaliśmy zdarzenie reagujące na utworzenie kontekstu Spring.
 ```
@@ -34,3 +38,12 @@ public class Warmup implements ApplicationListener<ContextRefreshedEvent> {
     }
 }
 ```
+
+## ApplicationEventPublisher
+
+Klasa pozwalająca obublikować zdarzenie.  
+  
+Dobrą praktyką jest publikacja zdarzeń w ramach metody oznaczonej adnotacją ``@Transactional``.
+
+## Własne zdarzenia
+
