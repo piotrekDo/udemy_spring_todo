@@ -12,13 +12,21 @@ public class ChangedTaskEventListener {
 
     private static final Logger logger = LoggerFactory.getLogger(ChangedTaskEventListener.class);
 
+    private final PersistedTaskEventRepository repository;
+
+    public ChangedTaskEventListener(PersistedTaskEventRepository repository) {
+        this.repository = repository;
+    }
+
     @EventListener
     public void on(TaskDone event) {
         logger.info("got: " + event);
+        repository.save(new PersistedTaskEvent(event));
     }
 
     @EventListener
     public void on(TaskUndone event){
         logger.info("got " + event);
+        repository.save(new PersistedTaskEvent(event));
     }
 }
