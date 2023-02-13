@@ -6,6 +6,7 @@ import com.example.demo.model.TaskRepository;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,12 @@ import java.util.concurrent.CompletableFuture;
 public class TaskController {
 
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
+    private final ApplicationEventPublisher publisher;
     private final TaskRepository taskRepository;
     private final TaskService taskService;
 
-    public TaskController(TaskRepository repository, TaskService taskService) {
+    public TaskController(ApplicationEventPublisher publisher, TaskRepository repository, TaskService taskService) {
+        this.publisher = publisher;
         this.taskRepository = repository;
         this.taskService = taskService;
     }
@@ -77,7 +80,9 @@ public class TaskController {
         if (!taskRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        taskRepository.findById(id).ifPresent(task -> task.setDone(!task.isDone()));
+        taskRepository.findById(id)
+                .map(Task::toggle)
+                .ifPresent(publisher::publishEvent);
         return ResponseEntity.noContent().build();
     }
 
