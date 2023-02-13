@@ -10,30 +10,26 @@ import java.util.stream.Collectors;
 
 public class GroupReadModel {
 
+    private int id;
     private String description;
     /**
      * Deadline from the latest task on group.
      */
     private LocalDateTime deadline;
+    private boolean done;
     private Set<GroupTaskReadModel> tasks;
 
     public GroupReadModel(TaskGroup source) {
+        this.id = source.getId();
         this.description = source.getDescription();
         this.deadline = source.getTasks().stream()
                 .map(Task::getDeadline)
                 .max(LocalDateTime::compareTo)
                 .orElse(null);
+        this.done = source.isDone();
         this.tasks = source.getTasks().stream()
                 .map(GroupTaskReadModel::new)
                 .collect(Collectors.toSet());
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     @Override
@@ -58,12 +54,36 @@ public class GroupReadModel {
                 '}';
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public LocalDateTime getDeadline() {
         return deadline;
     }
 
     public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 
     public Set<GroupTaskReadModel> getTasks() {

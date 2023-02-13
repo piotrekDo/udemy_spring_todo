@@ -1,9 +1,11 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tasks")
@@ -20,6 +22,7 @@ public class Task {
     private Audit audit = new Audit();
     @ManyToOne
     @JoinColumn(name = "task_group_id")
+    @JsonIgnore
     private TaskGroup taskGroup;
 
 
@@ -39,6 +42,24 @@ public class Task {
 
     public static Task createNewTask(String description, LocalDateTime deadline) {
         return new Task(description, deadline);
+    }
+
+    @Override
+    public String toString() {
+        return this.description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id && done == task.done && Objects.equals(description, task.description) && Objects.equals(deadline, task.deadline) && Objects.equals(audit, task.audit) && Objects.equals(taskGroup, task.taskGroup);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, done, deadline, audit, taskGroup);
     }
 
     public int getId() {

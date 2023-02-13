@@ -1,5 +1,6 @@
 package com.example.demo.logic;
 
+import com.example.demo.model.Task;
 import com.example.demo.model.TaskGroup;
 import com.example.demo.model.TaskGroupRepository;
 import com.example.demo.model.TaskRepository;
@@ -15,21 +16,21 @@ import java.util.stream.Collectors;
 @Service
 public class TaskGroupService {
 
-    private final TaskGroupRepository repository;
+    private final TaskGroupRepository taskGroupRepository;
     private final TaskRepository taskRepository;
 
     public TaskGroupService(TaskGroupRepository repository, TaskRepository taskRepository) {
-        this.repository = repository;
+        this.taskGroupRepository = repository;
         this.taskRepository = taskRepository;
     }
 
     public GroupReadModel createGroup(GroupWriteModel source) {
-        TaskGroup result = repository.save(source.toGroup());
+        TaskGroup result = taskGroupRepository.save(source.toGroup());
         return new GroupReadModel(result);
     }
 
     public List<GroupReadModel> readAll() {
-        return repository.findAll().stream()
+        return taskGroupRepository.findAll().stream()
                 .map(GroupReadModel::new)
                 .collect(Collectors.toList());
     }
@@ -39,9 +40,13 @@ public class TaskGroupService {
         if (taskRepository.existsByDoneIsFalseAndTaskGroup_Id(groupId)){
             throw new IllegalStateException("Group has undone tasks.");
         }
-        TaskGroup taskGroup = repository.findById(groupId)
+        TaskGroup taskGroup = taskGroupRepository.findById(groupId)
                 .orElseThrow(() -> new NoSuchElementException(String.format("No group with %d ID found.", groupId)));
 
         taskGroup.setDone(!taskGroup.isDone());
+    }
+
+    public List<Task> getTasksByGroup(int groupId) {
+        return taskRepository.findAllByTaskGroup_Id(groupId);
     }
 }
