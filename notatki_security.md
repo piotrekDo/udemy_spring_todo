@@ -14,4 +14,5 @@ zobaczyć stronę startową Keycloak
 
 ## Keycloak - Realm
 
-W wyświetlonym panelu tworzymy profil administratora i przechodzimy do logowania. 
+W wyświetlonym panelu tworzymy profil administratora i przechodzimy do logowania.  
+Realm to osobne ustawienia dla aplikacji. Możemy utworzyć osobny Realm z własnymi ustawieniami. 
