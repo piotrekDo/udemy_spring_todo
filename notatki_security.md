@@ -27,3 +27,88 @@ Konfigurujemy nowego klienta a więc aplikację łączącą się z naszym Realm.
 
 W ramach ustawień *Realm roles* możemy zdefiniować różne role użytkowników. W ramach aplikacji możemy zezwolić użytkonikom
 na rejestrację lub wprowadzać nowych ręcznie. 
+
+## Integracja ze Springiem
+
+Do rozpoczęcia współpracy naszej aplikacji z Keycloak potrzebujemy kilku zależnośći:
+Spring Boot Security- dla uruchomienia security.
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+Client OAuth2 dla współpracy z zewnętrznymi aplikacjiami.
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-oauth2-client</artifactId>
+</dependency>
+```
+
+OAuth2 resource server dla oddelegowania walidacji JWT do Keycloak.
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+</dependency>
+```
+
+Adapter dla Keycloak
+```
+<dependency>
+    <groupId>org.keycloak</groupId>
+    <artifactId>keycloak-spring-security-adapter</artifactId>
+    <version>20.0.3</version>
+</dependency>
+```
+  
+Następnie w ramach pliku application.properties / yml dopisujemy kilka ustawień
+```
+keycloak:
+  auth-server-url: 'http://localhost:8180/auth'
+  realm: 'TodoApp'
+  resource: 'todo-app-client-spring'
+  public-client: true
+```
+Określamy adres Keycloak, 'królestwo', *resource* oznacza nas jako aplikację i musi pokrywać się z *client-id* zdefiniowanym
+po stronie Keycloak. Ustawiamy również flagę *public-client* na ``true``.  
+  
+  
+Klasa konfiguracyjna
+```
+import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
+import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
+import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+
+@KeycloakConfiguration
+public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
+
+    @Bean
+    KeycloakSpringBootConfigResolver keycloakSpringBootConfigResolver(){
+        return new KeycloakSpringBootConfigResolver();
+    }
+
+
+    @Override
+    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
+    }
+
+    @Override
+    public void init(WebSecurity builder) throws Exception {
+
+    }
+
+    @Override
+    public void configure(WebSecurity builder) throws Exception {
+
+    }
+}
+```

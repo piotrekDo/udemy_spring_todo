@@ -1,7 +1,7 @@
 package com.example.demo.raport;
 
 import com.example.demo.model.event.TaskEvent;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
