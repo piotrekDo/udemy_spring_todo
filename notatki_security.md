@@ -16,3 +16,9 @@ zobaczyć stronę startową Keycloak
 
 W wyświetlonym panelu tworzymy profil administratora i przechodzimy do logowania.  
 Realm to osobne ustawienia dla aplikacji. Możemy utworzyć osobny Realm z własnymi ustawieniami. 
+
+### Client
+
+Konfigurujemy nowego klienta a więc aplikację łączącą się z naszym Realm. Tutaj ważnym ustawieniem jest
+``Valid redirect URIs`` czyli adres na który Keycloak ma przekierować użytkownika po poprawnym zalgoowaniu. Na przykład 
+``localhost:8080/*`` gwiazdka na końcu pozwoli odowłać się do różnych zasobów wewnątrz aplikacji. 
