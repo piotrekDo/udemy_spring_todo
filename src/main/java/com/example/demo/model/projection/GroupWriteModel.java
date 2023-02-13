@@ -11,11 +11,12 @@ public class GroupWriteModel {
     private Set<GroupTaskWriteModel> tasks;
 
     public TaskGroup toGroup() {
-        return TaskGroup.CreateNewTaskGroup(
-                this.description,
-                this.tasks.stream()
-                        .map(GroupTaskWriteModel::toTask)
-                        .collect(Collectors.toSet()));
+        TaskGroup result = new TaskGroup();
+        result.setDescription(this.description);
+        result.setTasks(this.tasks.stream()
+                .map(source -> source.toTask(result))
+                .collect(Collectors.toSet()));
+        return result;
     }
 
 

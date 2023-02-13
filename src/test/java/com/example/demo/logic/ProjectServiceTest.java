@@ -31,14 +31,16 @@ class ProjectServiceTest {
     private TaskGroupRepository taskGroupRepository;
     @MockBean
     private TaskConfigurationProperties configurationProperties;
+    @MockBean
+    private TaskGroupService taskGroupService;
     @Mock
     private TaskConfigurationProperties.Template template;
 
     @TestConfiguration
     static class ProjectServiceTestConfig {
         @Bean
-        ProjectService projectService(ProjectRepository projectRepository, TaskGroupRepository taskGroupRepository, TaskConfigurationProperties configurationProperties ){
-            return new ProjectService(projectRepository, taskGroupRepository, configurationProperties);
+        ProjectService projectService(ProjectRepository projectRepository, TaskGroupRepository taskGroupRepository, TaskConfigurationProperties configurationProperties, TaskGroupService taskGroupService){
+            return new ProjectService(projectRepository, taskGroupRepository, configurationProperties, taskGroupService);
         }
     }
 
