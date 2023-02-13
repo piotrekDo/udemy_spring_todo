@@ -9,7 +9,7 @@ uwierzytelniać użytkowników przy użyciu Google, Facebooka itd. Posiada równ
 łatwo skonfigurować chociażby uprawnienia użytkowników.  
 [Uruchamianie Keycloak](https://www.baeldung.com/spring-boot-keycloak)  
 **UWAGA** Keycloak domyślnie uruchamia się na porcie 8080, możemy zmienić to zachowanie poprzez dodanie odpowiedniej flagi
-``bin/kc.sh start-dev --http-port=8180``. Jeżeli wszystko się powiodło, pod adresem ``http://localhost:8180/`` powinniśmy 
+``bin/kc.bat start-dev --http-port=8180``. Jeżeli wszystko się powiodło, pod adresem ``http://localhost:8180/`` powinniśmy 
 zobaczyć stronę startową Keycloak  
 
 ## Keycloak - Realm
@@ -22,3 +22,8 @@ Realm to osobne ustawienia dla aplikacji. Możemy utworzyć osobny Realm z włas
 Konfigurujemy nowego klienta a więc aplikację łączącą się z naszym Realm. Tutaj ważnym ustawieniem jest
 ``Valid redirect URIs`` czyli adres na który Keycloak ma przekierować użytkownika po poprawnym zalgoowaniu. Na przykład 
 ``localhost:8080/*`` gwiazdka na końcu pozwoli odowłać się do różnych zasobów wewnątrz aplikacji. 
+
+### Role, użytkownicy
+
+W ramach ustawień *Realm roles* możemy zdefiniować różne role użytkowników. W ramach aplikacji możemy zezwolić użytkonikom
+na rejestrację lub wprowadzać nowych ręcznie. 
