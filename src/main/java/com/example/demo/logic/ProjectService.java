@@ -4,6 +4,7 @@ import com.example.demo.model.*;
 import com.example.demo.model.projection.GroupReadModel;
 import com.example.demo.model.projection.GroupTaskWriteModel;
 import com.example.demo.model.projection.GroupWriteModel;
+import com.example.demo.model.projection.ProjectWriteModel;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,8 +31,8 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Project save(Project project) {
-        return projectRepository.save(project);
+    public Project save(ProjectWriteModel project) {
+        return projectRepository.save(project.toProject());
     }
 
     public GroupReadModel createGroup(LocalDateTime deadline, Integer projectId) {
@@ -51,7 +52,7 @@ public class ProjectService {
                                         task.setDeadline(deadline.plusDays(projectStep.getDaysToDeadline()));
                                         return task;
                                     }).collect(Collectors.toSet()));
-                    return taskGroupService.createGroup(targetGroup);
+                    return taskGroupService.createGroup(targetGroup, project);
                 }).orElseThrow(() -> new NoSuchElementException(String.format("No project with ID %d found", projectId)));
     }
 

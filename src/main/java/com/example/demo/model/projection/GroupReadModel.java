@@ -24,6 +24,7 @@ public class GroupReadModel {
         this.description = source.getDescription();
         this.deadline = source.getTasks().stream()
                 .map(Task::getDeadline)
+                .filter(Objects::nonNull)
                 .max(LocalDateTime::compareTo)
                 .orElse(null);
         this.done = source.isDone();

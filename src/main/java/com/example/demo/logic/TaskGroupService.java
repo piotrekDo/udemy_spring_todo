@@ -1,9 +1,6 @@
 package com.example.demo.logic;
 
-import com.example.demo.model.Task;
-import com.example.demo.model.TaskGroup;
-import com.example.demo.model.TaskGroupRepository;
-import com.example.demo.model.TaskRepository;
+import com.example.demo.model.*;
 import com.example.demo.model.projection.GroupReadModel;
 import com.example.demo.model.projection.GroupWriteModel;
 import org.springframework.stereotype.Service;
@@ -25,7 +22,11 @@ public class TaskGroupService {
     }
 
     public GroupReadModel createGroup(GroupWriteModel source) {
-        TaskGroup result = taskGroupRepository.save(source.toGroup());
+        return createGroup(source, null);
+    }
+
+    public GroupReadModel createGroup(GroupWriteModel source, Project project) {
+        TaskGroup result = taskGroupRepository.save(source.toGroup(project));
         return new GroupReadModel(result);
     }
 
