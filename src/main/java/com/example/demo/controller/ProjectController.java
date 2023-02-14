@@ -5,13 +5,14 @@ import com.example.demo.model.Project;
 import com.example.demo.model.ProjectStep;
 import com.example.demo.model.projection.ProjectWriteModel;
 import io.micrometer.core.annotation.Timed;
-import javax.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,10 +27,13 @@ public class ProjectController {
     }
 
     @GetMapping
-    String showProjects(Model model) {
-        ProjectWriteModel projectWriteModel = new ProjectWriteModel();
-        model.addAttribute("project", projectWriteModel);
-        return "projects";
+    String showProjects(Model model, Authentication auth) {
+        if (auth.getAuthorities().stream().anyMatch(a-> a.getAuthority().equals("ROLE_ADMIN"))) {
+            ProjectWriteModel projectWriteModel = new ProjectWriteModel();
+            model.addAttribute("project", projectWriteModel);
+            return "projects";
+        }
+        return "index";
     }
 
     @PostMapping(params = "addStep")

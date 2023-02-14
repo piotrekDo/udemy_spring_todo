@@ -144,3 +144,23 @@ na początek dodajemy zależnośći
 I dopisujemy w HTML ``<html lang="en" xmlns:sec="http://www.thymeleaf.org">``.
 
 
+## Zabezpieczenia endpointów z poziomu kontrolera
+
+Możemy do metody wstrzyknąć obiekt ``Authentication`` pochodzący z pakietu ``import org.springframework.security.core.Authentication;``
+a następnie wewnątrz metody sprawdzić role. 
+```
+@GetMapping
+String showProjects(Model model, Authentication auth) {
+    if (auth.getAuthorities().stream().anyMatch(a-> a.getAuthority().equals("ROLE_ADMIN"))) {
+        ProjectWriteModel projectWriteModel = new ProjectWriteModel();
+        model.addAttribute("project", projectWriteModel);
+        return "projects";
+    }
+    return "index";
+    }
+```
+Wadą takiego rozwiązania jest ``NullPointerException`` w przypadku, gdy użytkownik nie jest zalogowany a usiłuje dostać się
+do zasobu. Nie ma wówczas utworzonego obiektu Athentication. Można się zabezpieczyć *null checkiem*  
+
+### Zabezpieczenia adnotacjami- aspekty
+
