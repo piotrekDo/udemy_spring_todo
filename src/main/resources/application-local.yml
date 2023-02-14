@@ -8,10 +8,18 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
 management:
   endpoints:
     web:
       exposure:
         include: '*'
+
+keycloak:
+  auth-server-url: 'http://localhost:8180'
+  realm: 'TodoApp'
+  resource: 'todo-app-client-spring'
+  public-client: true
+
 
 

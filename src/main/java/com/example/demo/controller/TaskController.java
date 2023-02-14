@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.logic.TaskService;
 import com.example.demo.model.Task;
 import com.example.demo.model.TaskRepository;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;

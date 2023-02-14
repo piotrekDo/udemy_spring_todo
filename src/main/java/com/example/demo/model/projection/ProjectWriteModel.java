@@ -2,8 +2,8 @@ package com.example.demo.model.projection;
 
 import com.example.demo.model.Project;
 import com.example.demo.model.ProjectStep;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.HashSet;

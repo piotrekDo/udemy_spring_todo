@@ -2,8 +2,8 @@ package com.example.demo.model;
 
 import com.example.demo.model.event.TaskEvent;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
