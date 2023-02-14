@@ -16,7 +16,7 @@ management:
         include: '*'
 
 keycloak:
-  auth-server-url: 'http://localhost:8180/auth'
+  auth-server-url: 'http://localhost:8180'
   realm: 'TodoApp'
   resource: 'todo-app-client-spring'
   public-client: true

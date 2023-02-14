@@ -112,3 +112,20 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
     }
 }
 ```
+
+## Wylogowanie w Keycloak
+
+Mając skonfigurowane ustawienia Keycloak wystarczy nam kontroler z metodą wywołującą ``request.logout()``.
+```
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+@RestController
+public class SsoController {
+    @GetMapping("/logout")
+    void logout(HttpServletRequest request) throws ServletException {
+        request.logout();
+    }
+}
+```
+
