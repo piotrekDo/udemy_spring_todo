@@ -28,12 +28,12 @@ public class ProjectController {
 
     @GetMapping
     String showProjects(Model model, Authentication auth) {
-        if (auth.getAuthorities().stream().anyMatch(a-> a.getAuthority().equals("ROLE_ADMIN"))) {
+//        if (auth.getAuthorities().stream().anyMatch(a-> a.getAuthority().equals("ROLE_ADMIN"))) {
             ProjectWriteModel projectWriteModel = new ProjectWriteModel();
             model.addAttribute("project", projectWriteModel);
             return "projects";
-        }
-        return "index";
+//        }
+//        return "index";
     }
 
     @PostMapping(params = "addStep")

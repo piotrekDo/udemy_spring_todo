@@ -164,3 +164,35 @@ do zasobu. Nie ma wówczas utworzonego obiektu Athentication. Można się zabezp
 
 ### Zabezpieczenia adnotacjami- aspekty
 
+Rozpoczynamy od anotowania klasy konfiguracyjnej
+```
+@EnableGlobalMethodSecurity(
+        jsr250Enabled = true,
+        securedEnabled = true,
+        prePostEnabled = true
+)
+@KeycloakConfiguration
+public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
+```
+
+#### @Secured
+
+Można zastosować nad klasą lub metodą
+```
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/url")
+    String url() {
+        return dataSourceProperties.getUrl();
+    }
+```
+
+Alternatywnie można wykorzystać adnotację ``@RolesAllowed``
+```
+    @RolesAllowed({"ROLES_ADMIN"})
+    @GetMapping("/prop")
+    boolean myProp() {
+        return taskConfigurationProperties.getTemplate().isAllowMultipleTasks();
+    }
+```
+
+Obydwie adnotacje przyjmują tablicę String, reprezentującą dopuszczalne role użytkownika. 
