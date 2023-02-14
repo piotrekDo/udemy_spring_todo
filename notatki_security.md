@@ -115,7 +115,8 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
 
 ## Wylogowanie w Keycloak
 
-Mając skonfigurowane ustawienia Keycloak wystarczy nam kontroler z metodą wywołującą ``request.logout()``.
+Mając skonfigurowane ustawienia Keycloak wystarczy nam kontroler z metodą wywołującą ``request.logout()``. Następnie zwracamy
+np. stronę startową aplikacji w celu przekierowania.
 ```
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -123,9 +124,23 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class SsoController {
     @GetMapping("/logout")
-    void logout(HttpServletRequest request) throws ServletException {
+    String logout(HttpServletRequest request) throws ServletException {
         request.logout();
+        return "index";
     }
 }
 ```
+
+## Security w Thymeleaf
+
+[Security w Thymeleaf](https://www.baeldung.com/spring-security-thymeleafhttps://www.baeldung.com/spring-security-thymeleaf)
+na początek dodajemy zależnośći
+```
+<dependency>
+    <groupId>org.thymeleaf.extras</groupId>
+    <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+</dependency>
+```
+I dopisujemy w HTML ``<html lang="en" xmlns:sec="http://www.thymeleaf.org">``.
+
 
